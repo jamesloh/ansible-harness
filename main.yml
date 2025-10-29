@@ -1,0 +1,41 @@
+---
+- name: Ansible Demonstration Playbook
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  
+  tasks:
+    - name: Display hello world message
+      debug:
+        msg: "Hello World!"
+    
+    - name: Create a file with sample text
+      copy:
+        content: |
+          This is a sample file created by Ansible.
+          It contains some text for demonstration purposes.
+          The file will be copied and modified later.
+        dest: ./sample_file.txt
+    
+    - name: Copy the file to a new name
+      copy:
+        src: ./sample_file.txt
+        dest: ./modified_file.txt
+        remote_src: yes
+    
+    - name: Modify text in the new file
+      replace:
+        path: ./modified_file.txt
+        regexp: 'sample file'
+        replace: 'modified file'
+    
+    - name: List all files in the current directory
+      find:
+        paths: .
+        file_type: file
+      register: files_found
+    
+    - name: Display found files
+      debug:
+        msg: "Files in directory: {{ item.path }}"
+      loop: "{{ files_found.files }}"
