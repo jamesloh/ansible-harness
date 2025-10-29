@@ -1,0 +1,23 @@
+version: 1
+kind: pipeline
+spec:
+  stages:
+    - name: build
+      type: ci
+      spec:
+        steps:
+          - name: Install ansible
+            type: run
+            spec:
+              container: rockylinux/rockylinux:8
+              script: |
+                dnf install -y epel-release -y
+                dnf install -y ansible
+                ansible --version
+                ansible-galaxy collection install ansible.posix
+          - name: second-step
+            type: run
+            spec:
+              container: alpine
+              script: echo "second step"
+
